@@ -1,0 +1,62 @@
+{
+  "name": "jci-code",
+  "displayName": "jci-code",
+  "description": "JCI Code Generator, Code Review ",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:jci-code.jciCode"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "jci-code.generate",
+        "title": "Generate Code"
+      },
+      {
+        "command": "jci-code.review",
+        "title": "Review Code"
+      }
+    ],
+    "configuration": {
+      "title": "",
+      "properties": {
+        "openAI.APIKey": {
+          "type": ["string"],
+          "default": "",
+          "description": "OpenAI API-Key"
+        },
+        "openAI.Model": {
+          "type": ["string"],
+          "default": "code-davinci-002",
+          "description": "OpenAI Model"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "pretest": "npm run lint",
+    "test": "node ./test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/glob": "^8.0.0",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "16.x",
+    "@types/vscode": "^1.74.0",
+    "@vscode/test-electron": "^2.2.0",
+    "eslint": "^8.28.0",
+    "glob": "^8.0.3",
+    "mocha": "^10.1.0",
+    "typescript": "^4.9.3"
+  },
+  "dependencies": {
+    "openai": "^3.1.0"
+  }
+}
