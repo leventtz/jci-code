@@ -3,7 +3,7 @@
 const vscode = require('vscode');
 const { Configuration, OpenAIApi } = require("openai");
 
-const API_KEY = "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";
+const API_KEY = "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";
 const configuration = new Configuration({
 apiKey: API_KEY,
 });
@@ -20,9 +20,8 @@ function activate(context) {
 			if (text) {
 				let prompt = text;
 				openai.createCompletion({
-					model: "code-davinci-002",
-					prompt: prompt,
-					temperature: 0,
+					model: "text-davinci-002",
+					prompt:text,
 					max_tokens: 256,
 					top_p: 1,
 					frequency_penalty: 0,
