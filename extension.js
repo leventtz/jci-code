@@ -18,7 +18,7 @@ function activate(context) {
 		if (vscode.window.activeTextEditor) {
 			let text = vscode.window.activeTextEditor.document.getText().toString();
 			if (text) {
-				let prompt = text;
+				vscode.window.showInformationMessage("Running code review.");
 				openai.createCompletion({
 					model: "text-davinci-002",
 					prompt:text,
@@ -30,6 +30,8 @@ function activate(context) {
 					console.log(response);
 					const sString=new vscode.SnippetString(response.data.choices[0].text);
 					vscode.window.activeTextEditor.insertSnippet(sString);
+					vscode.window.showInformationMessage("Code review completed.");
+
 				})
 			}
 		}
