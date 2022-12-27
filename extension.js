@@ -3,7 +3,7 @@
 const vscode = require('vscode');
 const { Configuration, OpenAIApi } = require("openai");
 
-const API_KEY = "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";
+const API_KEY = "<<API-KEY>>";
 const configuration = new Configuration({
 apiKey: API_KEY,
 });
