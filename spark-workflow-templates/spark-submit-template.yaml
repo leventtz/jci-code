@@ -1,63 +1,18 @@
-apiVersion: argoproj.io/v1alpha1
-kind: WorkflowTemplate
+apiVersion: v1
+kind: Pod
 metadata:
-  name: spark-submit-workflow-template
+  name: myapp-pod
+  labels:
+    app.kubernetes.io/name: MyApp
 spec:
-  entrypoint: spark-submit-workflow
-  arguments:
-    parameters:
-      - name: numberOfInstance
-        valueFrom:
-          configMapKeyRef:
-            name: spark-submit-parameters
-            key: numberOfInstance
-      - name: master
-        valueFrom:
-          configMapKeyRef:
-            name: spark-submit-parameters
-            key: master
-      - name: imageName
-        valueFrom:
-          configMapKeyRef:
-            name: spark-submit-parameters
-            key: imageName
-      - name: jarName
-        valueFrom:
-          configMapKeyRef:
-            name: spark-submit-parameters
-            key: jarName
-      - name: appInputParameters
-        valueFrom:
-          configMapKeyRef:
-            name: spark-submit-parameters
-            key: appInputParameters
-      - name: sparkCmd
-        valueFrom:
-          configMapKeyRef:
-            name: spark-submit-parameters
-            key: sparkCmd
-  templates:
-  - name: spark-submit-workflow
-    inputs:
-      parameters:
-        - name: appName
-        - name: master
-        - name: className
-        - name: numberOfInstance
-        - name: imageName
-        - name: jarName
-        - name: sparkCmd
-        - name: appInputParameters
-    container:
-      securityContext:
-        runAsUser: 0
-      command: [
-          "/bin/sh",
-          "-c",
-          "{{inputs.parameters.sparkCmd}}"
-      ]
-      image: leventsparktestk8cr.azurecr.io/jem:latest
-      imagePullPolicy: Always
-      resources: {}
-    imagePullSecrets:
-      - name: regcred
+  containers:
+  - name: myapp-container
+    image: busybox:1.28
+    command: ['sh', '-c', 'echo The app is running! && sleep 3600']
+  initContainers:
+  - name: init-myservice
+    image: busybox:1.28
+    command: ['sh', '-c', "until nslookup myservice.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for myservice; sleep 2; done"]
+  - name: init-mydb
+    image: busybox:1.28
+    command: ['sh', '-c', "until nslookup mydb.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for mydb; sleep 2; done"]
