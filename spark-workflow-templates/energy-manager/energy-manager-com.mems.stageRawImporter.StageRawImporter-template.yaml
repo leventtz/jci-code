@@ -1,0 +1,43 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: energy-manager-stage-raw-importer-template
+spec:
+  entrypoint: energy-manager-stage-raw-importer
+  templates:
+    - name: energy-manager-stage-raw-importer
+      steps:
+        - - name: energy-manager-stage-raw-importer
+            templateRef:
+              name: spark-submit-workflow-template
+              template: spark-submit-workflow
+            arguments:
+              parameters:
+                - name: appName
+                  value: StageRawImporter
+                - name: className
+                  value: com.mems.stageRawImporter.StageRawImporter
+                - name: numberOfInstance
+                  value: 20
+                - name: master
+                  valueFrom:
+                    configMapKeyRef:
+                      name: spark-submit-parameters
+                      key: master
+                - name: imageName
+                  valueFrom:
+                    configMapKeyRef:
+                      name: spark-submit-parameters
+                      key: imageName
+                - name: jarName
+                  valueFrom:
+                    configMapKeyRef:
+                      name: spark-submit-parameters
+                      key: jarName
+                - name: appInputParameters
+                  value: wasbs://rawdata-small@ltsnowflakedata.blob.core.windows.net
+                - name: sparkCmd
+                  valueFrom:
+                    configMapKeyRef:
+                      name: spark-submit-parameters
+                      key: sparkCmd
